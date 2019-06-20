@@ -1,7 +1,7 @@
 ---
 sectionid: appoverview
 sectionclass: h2
-title: Application Overview
+title: アプリケーションの概要
 parent-id: labs
 ---
 

@@ -1,4 +1,4 @@
-NS ?= azch
+NS ?= asashiho
 IMAGE_NAME ?= aro-site
 VERSION ?= latest
 LOCALPORT = 8080

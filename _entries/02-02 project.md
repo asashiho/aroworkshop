@@ -1,7 +1,7 @@
 ---
 sectionid: createproject
 sectionclass: h2
-title: Create project
+title: プロジェクトの作成
 parent-id: labs
 ---
 

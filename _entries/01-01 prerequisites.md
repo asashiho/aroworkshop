@@ -1,7 +1,7 @@
 ---
 sectionid: prereq
 sectionclass: h2
-title: Prerequisites
+title: 事前準備
 parent-id: intro
 ---
 

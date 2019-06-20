@@ -1,7 +1,7 @@
 ---
 sectionid: networkpolicy
 sectionclass: h2
-title: Create network policy
+title: ネットワークポリシーの作成
 parent-id: labs
 ---
 
