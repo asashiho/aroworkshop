@@ -5,47 +5,48 @@ title: Create project
 parent-id: labs
 ---
 
-### Login to the web console
+### Web Consoleへのログイン
 
 {% collapsible %}
 
-Each Azure Red Hat OpenShift cluster has a public hostname that hosts the OpenShift Web Console.
+Azure Red Hat OpenShiftクラスタは、OpenShift Web Consoleをホストするパブリックホスト名を持ちます。
 
-Retrieve your cluster specific hostname. Replace `<cluster name>` and `<resource group>` by those specific to your environment.
+次のコマンドを実行してホスト名を取得します。ここで<cluster name>と<resource group>は固有の値になります。
 
 ```sh
 az openshift show -n <cluster name> -g <resource group> --query "publicHostname" -o tsv
 ```
 
-You should get back something like `openshift.77f472f620824da084be.eastus.azmosa.io`. Add `https://` to the beginning of that hostname and open that link in your browser. You'll be asked to login with Azure Active Directory. Use the username and password provided to you in the lab.
+例えばopenshift.77f472f620824da084be.eastus.azmosa.ioが得られたら
+先頭に「https://」を追加してブラウザでリンクを開きます。ここでAzure Active Directoryにログインするように求められます。ラボではあなたに提供されたユーザー名とパスワードを使用してください。
 
-After logging in, you should be able to see the Azure Red Hat OpenShift Web Console.
+ログインすると、Azure Red Hat OpenShift Webコンソールが表示されます。
 
 ![Azure Red Hat OpenShift Web Console](media/openshift-webconsole.png)
 
 {% endcollapsible %}
 
-### Retrieve the login command and token
+### ログインとトークンの取得
 
 {% collapsible %}
 
-> **Note** Make sure you complete the [prerequisites](#prereq) to install the OpenShift CLI on the Azure Cloud Shell.
+> **Note** OpenShift CLIをAzure Cloud Shellにインストールするための[前提条件](#prereq)をすべて満たしていることを確認してください。
 
-Once you're logged into the Web Console, click on the username on the top right, then click **Copy login command**.
+Webコンソールにログインしたら、右上のユーザー名を選び **Copy login command** をクリックします。
 
 ![Copy login command](media/login-command.png)
 
-Open the [Azure Cloud Shell](https://shell.azure.com), navigate to where you extracted the OpenShift CLI, and paste the login command. You should be able to connect to the cluster.
+[Azure Cloud Shell](https://shell.azure.com)を開き、OpenShift CLIをダウンロードした場所に移動して、loginコマンドを貼り付けます。これでクラスタに接続できるはずです。
 
 ![Login through the cloud shell](media/oc-login-cloudshell.png)
 
 {% endcollapsible %}
 
-### Create a project
+### プロジェクトの作成
 
 {% collapsible %}
 
-A project allows a community of users to organize and manage their content in isolation from other communities.
+OpenShiftではプロジェクトによって、ユーザーのコミュニティは他のコミュニティとは独立してコンテンツを整理および管理できます。
 
 ```sh
 ./oc new-project workshop
