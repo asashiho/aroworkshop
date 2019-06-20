@@ -5,25 +5,26 @@ title: Prerequisites
 parent-id: intro
 ---
 
-### Azure subscription and Azure Red Hat OpenShift environment
+### AzureサブスクリプションとAzure Red Hat OpenShift環境
 
 {% collapsible %}
 
-If you haven't provisioned an environment yet, please go ahead and create one now. You should have been given access to a Microsoft Hands-on Labs environment for this workshop through a registration link and an activation code. If you don't have one, please ask your proctors. For more information, please go to the [Microsoft Hands-on Labs](https://www.microsoft.com/handsonlabs/) website.
+まだ環境をプロビジョニングしていない場合は、先に進んで環境を作成してください。このワークショップでは、登録リンクとアクティベーションコードを使って、Microsoftハンズオンラボ環境へのアクセス権が与えられます。お持ちでない方は、講師にお尋ねください。詳細については、Microsoftハンズオンラボの Webサイト[Microsoft Hands-on Labs](https://www.microsoft.com/handsonlabs/)を参照してください。
 
-Please continue the registration with the activation code you've been provided.
+ここではあなたに提供されたアクティベーションコードで登録を続けてください。
+
 
 ![Registration](media/managedlab/0-registration.png)
 
-After you complete the registration, click Launch Lab
+登録が完了したら、[Launch Lab]をクリックします。
 
 ![Launch lab](media/managedlab/1-launchlab.png)
 
-The Azure subscription and associated lab credentials will be provisioned. This will take a few moments. This process will also provision an Azure Red Hat OpenShift cluster.
+Azureサブスクリプションと関連するラボの資格情報が準備されます。これには少し時間がかかります。このプロセスでは、Azure Red Hat OpenShiftクラスターもプロビジョニングされます。
 
 ![Preparing lab](media/managedlab/2-preparinglab.png)
 
-Once the environment is provisioned, a screen with all the appropriate lab credentials will be presented. Additionally, you'll have your Azure Red Hat OpenShift cluster endpoint. The credentials will also be emailed to the email address entered at registration.
+環境がプロビジョニングされると、認証情報を含む画面が表示されます。さらに、Azure Red Hat OpenShiftクラスターエンドポイントも表示されます。この資格情報は登録時に入力したEメールアドレスにも送信されます。
 
 ![Credentials](media/managedlab/3-credentials.png)
 
@@ -34,24 +35,26 @@ Once the environment is provisioned, a screen with all the appropriate lab crede
 #### Azure Cloud Shell
 
 You can use the Azure Cloud Shell accessible at <https://shell.azure.com> once you login with an Azure subscription.
+Azureサブスクリプションでログインすると、[Azure Cloud Shell]<https://shell.azure.com>を使用できます。
 
 {% collapsible %}
 
-Head over to <https://shell.azure.com> and sign in with your Azure Subscription details.
+あなたの Azure Subscription でログインします。
 
-Select **Bash** as your shell.
+ここでは **Bash** を選択してください。
 
 ![Select Bash](media/cloudshell/0-bash.png)
 
-Select **Show advanced settings**
+**Show advanced settings** を選択します。
 
 ![Select show advanced settings](media/cloudshell/1-mountstorage-advanced.png)
 
-Set the **Storage account** and **File share** names to your resource group name (all lowercase, without any special characters), then hit **Create storage**
+
+ストレージアカウントとファイル共有、リソースグループ名を設定します。
 
 ![Azure Cloud Shell](media/cloudshell/2-storageaccount-fileshare.png)
 
-You should now have access to the Azure Cloud Shell
+これでAzure Cloud Shellにアクセスできるはずです。
 
 ![Set the storage account and fileshare names](media/cloudshell/3-cloudshell.png)
 
@@ -59,11 +62,11 @@ You should now have access to the Azure Cloud Shell
 
 #### OpenShift CLI (oc)
 
-You'll need to [download the latest OpenShift CLI (oc)](https://github.com/openshift/origin/releases/tag/v3.11.0) client tools release. Follow the link to GitHub, and copy the link for the You can follow the steps below on the Azure Cloud Shell.
+最新の[OpenShift CLI(oc)](https://github.com/openshift/origin/releases/tag/v3.11.0)クライアントツールをダウンロードします。GitHubへのリンクをたどり、Azure Cloud Shellで以下の手順に従います。
 
 {% collapsible %}
 
-> **Note** You'll need to change the link below to the latest link you get from the page.
+> **Note** リンクを最新のものに変更してください。 
 > ![GitHub release links](media/github-oc-release.png)
 
 ```sh
@@ -74,8 +77,8 @@ mkdir openshift
 tar -zxvf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz -C openshift --strip-components=1
 ```
 
-The OpenShift CLI (oc) is now in the `openshift` directory.
+ocコマンドはopenshiftディレクトリにあります。
 
-> **Note** You'll need to run the OpenShift CLI commands from the `openshift` directory through `./oc`.
+> **Note** openshiftディレクトリからOpenShift CLIコマンドを実行してください。 `./oc`.
 
 {% endcollapsible %}
