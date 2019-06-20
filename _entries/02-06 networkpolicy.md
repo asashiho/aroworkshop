@@ -6,23 +6,25 @@ parent-id: labs
 ---
 
 Now that you have the application working, it is time to apply some security hardening. You'll use [network policies](https://docs.openshift.com/aro/admin_guide/managing_networking.html#admin-guide-networking-networkpolicy) to restrict communication to the `rating-api`.
+アプリケーションが動作したので、セキュリティを強化しましょう。ここでは[network policies](https://docs.openshift.com/aro/admin_guide/managing_networking.html#admin-guide-networking-networkpolicy)を使って通信を制限します。
 
-### Switch to the Cluster Console
+### クラスタコンソールに切り替える
 
 {% collapsible %}
 
-Switch to the **Cluster Console** page. Click **Create Network Policy**.
+クラスタコンソールページに切り替えます。**Create Network Policy** をクリックします。 
 ![Cluster console page](media/cluster-console.png)
 
 {% endcollapsible %}
 
-### Create network policy
+### ネットワークポリシーを作成する
 
 {% collapsible %}
 
-You will create a policy that applies to any pod matching the `app=rating-api` label. The policy will allow ingress only from pods matching the `app=rating-web` label.
+ここで `app=rating-api` ラベルに一致するPodに適用されるポリシーを作成します。ポリシーは、`app=rating-api` ラベルに一致するPodからのingressを許可します。
 
-Use the YAML below in the editor, and make sure you're targeting the **workshop** project.
+下のエディタでYAMLを使用して、`workshop` プロジェクトをターゲットにしていることを確認してください。
+
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -43,7 +45,7 @@ spec:
 
 ![Create network policy](media/create-networkpolicy.png)
 
-Click **Create**.
+作成をクリックします。
 
 {% endcollapsible %}
 
