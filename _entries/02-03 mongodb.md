@@ -5,23 +5,23 @@ title: Deploy mongoDB
 parent-id: labs
 ---
 
-### Create mongoDB from template
+### テンプレートからmongoDBを作成する
 
 {% collapsible %}
-Azure Red Hat OpenShift provides a container image and template to make creating a new MongoDB database service easy. The template provides parameter fields to define all the mandatory environment variables (user, password, database name, etc) with predefined defaults including auto-generation of password values. It will also define both a deployment configuration and a service.
+Azure Red Hat OpenShiftは、MongoDBを簡単に作成するためのコンテナーイメージとテンプレートを提供します。テンプレートには、パスワードの自動生成を含む事前定義されたデフォルトを使った、すべての環境変数（ユーザー名/パスワード/データベース名など）を定義するためのパラメーターフィールドがあります。また、デプロイメント構成とサービスの両方を定義します。
 
-There are two templates available:
+利用可能な2つのテンプレートがあります。
 
-* `mongodb-ephemeral` is for development/testing purposes only because it uses ephemeral storage for the database content. This means that if the database pod is restarted for any reason, such as the pod being moved to another node or the deployment configuration being updated and triggering a redeploy, all data will be lost.
+* `mongodb-ephemeral` データベースに一時ストレージを使用する開発/テスト目的のテンプレートです。Podが別のNodeに移動されたり、Deploymentが更新されて再デプロイがトリガーされたりするなど、何らかの理由でデータベースPodが再起動されると、すべてのデータが失われます。
 
-* `mongodb-persistent` uses a persistent volume store for the database data which means the data will survive a pod restart. Using persistent volumes requires a persistent volume pool be defined in the Azure Red Hat OpenShift deployment.
+* `mongodb-persistent` データベースのデータ保存領域に永続的なボリュームストアを使用します。つまり、データはPodの再起動後も消えません。永続ボリュームを使用するには、Azure Red Hat OpenShiftのDeploymentで永続ボリュームプールを定義する必要があります。
 
-> **Hint** You can retrieve a list of templates using the command below. The templates are preinstalled in the `openshift` namespace.
+> **Hint** 以下のコマンドを使用してテンプレートのリストを取得できます。テンプレートは`openshift` 名前空間にインストールされています。
 > ```sh
 > ./oc get templates -n openshift
 > ```
 
-Create a mongoDB deployment using the `mongodb-persistent` template. You're passing in the values to be replaced (username, password and database) which generates a YAML/JSON file. You then pipe it to the `oc create` command.
+mongodb-persistentテンプレートを使ってmongoDBデプロイメントを作成します。YAML/JSONファイルを生成するとき、ユーザー名、パスワード、データベースを渡しoc createコマンドにパイプします。
 
 ```sh
 ./oc process openshift//mongodb-persistent \
@@ -31,19 +31,19 @@ Create a mongoDB deployment using the `mongodb-persistent` template. You're pass
     -p MONGODB_ADMIN_PASSWORD=ratingspassword | ./oc create -f -
 ```
 
-If you now head back to the web console, you should see a new deployment for mongoDB.
+Webコンソールに戻ったら、mongoDBの新しいDeploymentが表示されているはずです。
 
 ![MongoDB deployment](media/mongodb-overview.png)
 
 {% endcollapsible %}
 
-### Restore data
+### データのリストア
 
 {% collapsible %}
 
-Now you have the database running on the cluster, it is time to restore data.
+データベースがクラスタ上で動作しているので、ここにデータを復元します。
 
-Download and unzip the data zip on the Azure Cloud Shell.
+Azure Cloud Shellでデータのzipをダウンロードして解凍します。
 
 ```sh
 wget https://github.com/microsoft/rating-api/raw/master/data.tar.gz
@@ -52,7 +52,7 @@ tar -zxvf data.tar.gz
 
 ![Download and unzip the data](media/download-data.png)
 
-Identify the name of the running MongoDB pod. For example, you can view the list of pods in your current project:
+実行中のMongoDB Podの名前を特定します。次のコマンドは現在のプロジェクトのPodのリストを表示します。
 
 ```sh
 ./oc get pods
@@ -60,7 +60,7 @@ Identify the name of the running MongoDB pod. For example, you can view the list
 
 ![oc get pods](media/oc-getpods-mongo.png)
 
-Copy the data folder into the mongoDB pod.
+データフォルダをmongoDB Podにコピーします。
 
 ```sh
 ./oc rsync ./data mongodb-1-2g98n:/opt/app-root/src
@@ -68,7 +68,7 @@ Copy the data folder into the mongoDB pod.
 
 ![oc get pods](media/oc-rsync.png)
 
-Then, open a remote shell session to the desired pod.
+次に、目的のPodへのrshを開きます。
 
 ```sh
 ./oc rsh mongodb-1-2g98n
@@ -76,7 +76,7 @@ Then, open a remote shell session to the desired pod.
 
 ![oc rsh](media/oc-rsh.png)
 
-Run the `mongoimport` command to import the JSON data files into the database. Make sure the username, password and database name match what you specified when you deployed the template.
+`mongoimport` コマンドを実行してJSONデータファイルをデータベースにインポートします。ユーザー名/パスワード/データベース名が、テンプレートをデプロイしたときに指定したものと一致していることを確認してください。
 
 ```sh
 mongoimport --host 127.0.0.1 --username ratingsuser --password ratingspassword --db ratingsdb --collection items --type json --file data/items.json --jsonArray
@@ -88,11 +88,11 @@ mongoimport --host 127.0.0.1 --username ratingsuser --password ratingspassword -
 
 {% endcollapsible %}
 
-### Retrieve mongoDB service hostname
+### mongoDB のservice hostnameの確認
 
 {% collapsible %}
 
-Find the mongoDB service.
+mongoDB のサービスを確認します。
 
 ```sh
 ./oc get svc mongodb
@@ -100,9 +100,11 @@ Find the mongoDB service.
 
 ![oc get svc](media/oc-get-svc-mongo.png)
 
-The service will be accessible at the following DNS name: `mongodb.workshop.svc.cluster.local` which is formed of `[service name].[project name].svc.cluster.local`. This resolves only within the cluster.
+サービスは、次のDNS名でアクセスできるようになります
+[service name].[project name].svc.cluster.local
+これはクラスタ内でのみ解決されます。
 
-You can also retrieve this from the web console. You'll need this hostname to configure the `rating-api`.
+Webコンソールからこれを取得することもできます。設定するにはこのホスト名が必要です。
 
 ![MongoDB service in the Web Console](media/mongo-svc-webconsole.png)
 
