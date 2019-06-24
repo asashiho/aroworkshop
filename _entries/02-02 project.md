@@ -2,7 +2,7 @@
 sectionid: createproject
 sectionclass: h2
 title: プロジェクトの作成
-parent-id: labs
+parent-id: lab-ratingapp
 ---
 
 ### Web Consoleへのログイン

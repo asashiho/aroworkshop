@@ -2,7 +2,7 @@
 sectionid: appoverview
 sectionclass: h2
 title: アプリケーションの概要
-parent-id: labs
+parent-id: lab-ratingapp
 ---
 
 Azure Red Hat OpenShiftにサンプルアプリケーションをデプロイします。

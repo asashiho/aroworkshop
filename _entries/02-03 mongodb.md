@@ -2,7 +2,7 @@
 sectionid: mongodb
 sectionclass: h2
 title: mongoDBのデプロイ
-parent-id: labs
+parent-id: lab-ratingapp
 ---
 
 ### テンプレートからmongoDBを作成する
@@ -37,6 +37,20 @@ Webコンソールに戻ったら、mongoDBの新しいDeploymentが表示され
 
 {% endcollapsible %}
 
+### mongoDB Podが正常に作成されたかどうかを確認
+
+{% collapsible %}
+
+`oc status` コマンドを実行して新しいアプリケーションのステータスを確認し、mongoDBテンプレートのデプロイが成功したかどうかを確認してください。
+
+```sh
+./oc status
+```
+
+![oc status](media/oc-status-mongo.png)
+
+{% endcollapsible %}
+
 ### データのリストア
 
 {% collapsible %}
@@ -66,7 +80,7 @@ tar -zxvf data.tar.gz
 ./oc rsync ./data mongodb-1-2g98n:/opt/app-root/src
 ```
 
-![oc get pods](media/oc-rsync.png)
+![oc rsync](media/oc-rsync.png)
 
 次に、目的のPodへのrshを開きます。
 
