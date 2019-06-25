@@ -7,7 +7,7 @@ parent-id: intro
 
 ### Source-To-Image (S2I)
 
-Source-to-Image (S2I) is a toolkit and workflow for building reproducible container images from source code. S2I produces ready-to-run images by injecting source code into a container image and letting the container prepare that source code for execution. By creating self-assembling builder images, you can version and control your build environments exactly like you use container images to version your runtime environments.
+Source-to-Image(S2I)は、ソースコードから再現可能なコンテナイメージを構築するためのワークフローです。S2Iをつかうと、ソースコードから実行可能なイメージを生成します。これによりコンテナーイメージを使用してランタイム環境をバージョン管理するのとまったく同じように、ビルド環境をバージョン管理し、制御することができます。
 
 #### How it works
 
