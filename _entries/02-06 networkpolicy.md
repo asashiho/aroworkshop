@@ -5,7 +5,6 @@ title: ネットワークポリシーの作成
 parent-id: lab-ratingapp
 ---
 
-Now that you have the application working, it is time to apply some security hardening. You'll use [network policies](https://docs.openshift.com/aro/admin_guide/managing_networking.html#admin-guide-networking-networkpolicy) to restrict communication to the `rating-api`.
 アプリケーションが動作したので、セキュリティを強化しましょう。ここでは[network policies](https://docs.openshift.com/aro/admin_guide/managing_networking.html#admin-guide-networking-networkpolicy)を使って通信を制限します。
 
 ### クラスタコンソールに切り替える
