@@ -34,7 +34,6 @@ Azureサブスクリプションと関連するラボの資格情報が準備さ
 
 #### Azure Cloud Shell
 
-You can use the Azure Cloud Shell accessible at <https://shell.azure.com> once you login with an Azure subscription.
 Azureサブスクリプションでログインすると、[Azure Cloud Shell]<https://shell.azure.com>を使用できます。
 
 {% collapsible %}
