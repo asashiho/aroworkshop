@@ -18,17 +18,17 @@ Azure Red Hat OpenShiftは、MongoDBを簡単に作成するためのコンテ�
 
 > **Hint** 以下のコマンドを使用してテンプレートのリストを取得できます。テンプレートは`openshift` 名前空間にインストールされています。
 > ```sh
-> ./oc get templates -n openshift
+> oc get templates -n openshift
 > ```
 
 mongodb-persistentテンプレートを使ってmongoDBデプロイメントを作成します。YAML/JSONファイルを生成するとき、ユーザー名、パスワード、データベースを渡しoc createコマンドにパイプします。
 
 ```sh
-./oc process openshift//mongodb-persistent \
+oc process openshift//mongodb-persistent \
     -p MONGODB_USER=ratingsuser \
     -p MONGODB_PASSWORD=ratingspassword \
     -p MONGODB_DATABASE=ratingsdb \
-    -p MONGODB_ADMIN_PASSWORD=ratingspassword | ./oc create -f -
+    -p MONGODB_ADMIN_PASSWORD=ratingspassword | oc create -f -
 ```
 
 Webコンソールに戻ったら、mongoDBの新しいDeploymentが表示されているはずです。
@@ -44,10 +44,10 @@ Webコンソールに戻ったら、mongoDBの新しいDeploymentが表示され
 `oc status` コマンドを実行して新しいアプリケーションのステータスを確認し、mongoDBテンプレートのデプロイが成功したかどうかを確認してください。
 
 ```sh
-./oc status
+oc status
 ```
 
-![oc status](media/oc-status-mongo.png)
+![oc status](media/oc-status-mongodb.png)
 
 {% endcollapsible %}
 
@@ -69,7 +69,7 @@ tar -zxvf data.tar.gz
 実行中のMongoDB Podの名前を特定します。次のコマンドは現在のプロジェクトのPodのリストを表示します。
 
 ```sh
-./oc get pods
+oc get pods
 ```
 
 ![oc get pods](media/oc-getpods-mongo.png)
@@ -77,7 +77,7 @@ tar -zxvf data.tar.gz
 データフォルダをmongoDB Podにコピーします。
 
 ```sh
-./oc rsync ./data mongodb-1-2g98n:/opt/app-root/src
+oc rsync ./data mongodb-1-nqpt5:/opt/app-root/src
 ```
 
 ![oc rsync](media/oc-rsync.png)
@@ -85,7 +85,7 @@ tar -zxvf data.tar.gz
 次に、目的のPodへのrshを開きます。
 
 ```sh
-./oc rsh mongodb-1-2g98n
+oc rsh mongodb-1-nqpt5
 ```
 
 ![oc rsh](media/oc-rsh.png)
@@ -109,7 +109,7 @@ mongoimport --host 127.0.0.1 --username ratingsuser --password ratingspassword -
 mongoDB のサービスを確認します。
 
 ```sh
-./oc get svc mongodb
+oc get svc mongodb
 ```
 
 ![oc get svc](media/oc-get-svc-mongo.png)
@@ -125,6 +125,6 @@ Webコンソールからこれを取得することもできます。設定す�
 {% endcollapsible %}
 
 > **Resources**
-> * <https://docs.openshift.com/aro/using_images/db_images/mongodb.html>
-> * <https://docs.openshift.com/aro/using_images/db_images/mongodb.html#running-mongodb-commands-in-containers>
-> * <https://docs.openshift.com/aro/dev_guide/templates.html>
+> * [ARO Documentation - MongoDB](https://docs.openshift.com/aro/using_images/db_images/mongodb.html)
+> * [ARO Documentation - Running MongoDB Commands...](https://docs.openshift.com/aro/using_images/db_images/mongodb.html#running-mongodb-commands-in-containers)
+> * [ARO Documentation - Templates](https://docs.openshift.com/aro/dev_guide/templates.html)

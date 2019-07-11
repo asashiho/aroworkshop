@@ -74,10 +74,11 @@ wget https://github.com/openshift/origin/releases/download/v3.11.0/openshift-ori
 mkdir openshift
 
 tar -zxvf openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit.tar.gz -C openshift --strip-components=1
+
+echo 'export PATH=$PATH:~/openshift' >> ~/.bashrc && source ~/.bashrc
+
 ```
 
-ocコマンドはopenshiftディレクトリにあります。
-
-> **Note** openshiftディレクトリからOpenShift CLIコマンドを実行してください。 `./oc`.
+The OpenShift CLI (oc) is now installed.
 
 {% endcollapsible %}

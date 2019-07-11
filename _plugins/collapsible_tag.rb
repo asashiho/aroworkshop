@@ -12,7 +12,11 @@ module Jekyll
 <!-- Begin collapsible container div -->
 <div class="collapsible-content-container">
   <!-- Begin collapsible container button -->
+<<<<<<< HEAD
   <button class="toggle-collapsible">Click</button>
+=======
+  <button class="toggle-collapsible">Toggle</button>
+>>>>>>> b0c072bd7458c10a6b19872faeec75260aa34f67
   <!-- Begin collapsible container content div -->
   <div class="collapsible-content">
     <!-- Begin parsedText -->

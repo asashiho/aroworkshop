@@ -49,12 +49,15 @@ Webコンソールにログインしたら、右上のユーザー名を選び *
 OpenShiftではプロジェクトによって、ユーザーのコミュニティは他のコミュニティとは独立してコンテンツを整理および管理できます。
 
 ```sh
-./oc new-project workshop
+oc new-project workshop
 ```
+
+![Create new project](media/oc-newproject.png)
+
 
 {% endcollapsible %}
 
 > **Resources**
-> * <https://docs.openshift.com/aro/getting_started/access_your_services.html>
-> * <https://docs.openshift.com/aro/cli_reference/get_started_cli.html>
-> * <https://docs.openshift.com/aro/dev_guide/projects.html>
+> * [ARO Documentation - Access your services](https://docs.openshift.com/aro/getting_started/access_your_services.html)
+> * [ARO Documentation - Getting started with the CLI](https://docs.openshift.com/aro/cli_reference/get_started_cli.html)
+> * [ARO Documentation - Projects](https://docs.openshift.com/aro/dev_guide/projects.html)

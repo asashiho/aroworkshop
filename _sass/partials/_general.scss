@@ -24,7 +24,18 @@ body {
 
 .build {
   font-family: monospace;
+  color: black;
   font-size: x-small;
+  text-align: center;
+}
+
+.commit {
+  font-family: monospace;
+  text-decoration: underline;
+  font-size: x-small;
+  color: $darkblue;
+  margin-top: 0;
+  text-align: center;
 }
 
 .content {
@@ -34,7 +45,7 @@ body {
   right: 0;
 
   @media screen and (max-width: $sidebar-collapse) {
-    width: 100%;
+    width: 97%;
   }
 
   .toggle {
