@@ -1,41 +1,43 @@
 ---
 sectionid: lab2-heathcheck
 sectionclass: h2
-title: Exploring Health Checks
+title: ヘルスチェック
 parent-id: lab-clusterapp
 ---
-
-In this section we will intentionally crash our pods as well as make a pod non-responsive to the liveliness probes from Kubernetes and see how Kubernetes behaves.  We will first intentionally crash our pod and see that Kubernetes will self-heal and immediately spin it back up. Then we will trigger the health check by stopping the response on the `/health` endpoint in our app. After three consecutive failures Kubernetes should kill the pod and then recreate it.
+このセクションでは、Podを意図的にクラッシュさせるだけでなく、PodをKubernetesのLiveness Probeに反応しないようにして、Kubernetesの動作を確認します。まず意図的にPodをクラッシュさせ、Kubernetesが自己回復してすぐにスピンアップすることを確認します。そしてアプリのエンドポイント`/health` で応答を停止してヘルスチェックをトリガーします。3回連続して失敗した後、KubernetesはPodをkillから作り直すべきです。
 
 {% collapsible %}
 
-It would be best to prepare by splitting your screen between the OpenShift Web UI and the OSToy application so that you can see the results of our actions immediately.
+OpenShift Web UIとOSToyアプリケーションの間で画面を分割して準備することをお勧めします。そうすれば、すぐに結果を見ることができます。
 
 ![Splitscreen](/media/managedlab/23-ostoy-splitscreen.png)
 
-But if your screen is too small or that just won't work, then open the OSToy application in another tab so you can quickly switch to OpenShift Web Console once you click the button. To get to this deployment in the OpenShift Web Console go to: 
 
-Applications > Deployments > click the number in the "Last Version" column for the "ostoy-frontend" row
+ただし、画面が小さすぎる場合やそれがうまくいかない場合は、別のタブでOSToyアプリケーションを開くと、ボタンをクリックするとすぐにOpenShift Webコンソールに切り替えることができます。OpenShift Webコンソールでこの配置に移動するには、次のURLにアクセスしてください。
+
+「Applications」>「Deployments」>「ostoy-frontend」行の「Last Version」列の番号をクリックします。
+
 
 ![Deploy Num](/media/managedlab/11-ostoy-deploynum.png)
 
-Go to the OSToy app, click on *Home* in the left menu, and enter a message in the "Crash Pod" tile (ie: "This is goodbye!") and press the "Crash Pod" button.  This will cause the pod to crash and Kubernetes should restart the pod. After you press the button you will see:
+OSToyアプリに行き、左側のメニューで *Home* をクリックし、そして「Crash Pod」タイルにメッセージを入力して（すなわち、「This is goodbye！」）、そして「Crash Pod」ボタンを押します。これによりPodがクラッシュし、KubernetesはPodを再起動します。ボタンを押すと次のように表示されます。
 
 ![Crash Message](/media/managedlab/12-ostoy-crashmsg.png)
 
-Quickly switch to the Deployment screen. You will see that the pod is red, meaning it is down but should quickly come back up and show blue.
+
+すぐに配置画面に切り替えます。ポッドが赤、つまりダウンしていることがわかりますが、すぐに青に表示されます。
 
 ![Pod Crash](/media/managedlab/13-ostoy-podcrash.png)
 
-You can also check in the pod events and further verify that the container has crashed and been restarted.
+Podのイベントをチェックして、コンテナがクラッシュして再起動したことを確認することもできます。
 
 ![Pod Events](/media/managedlab/14-ostoy-podevents.png)
 
-Keep the page from the pod events still open from step 4.  Then in the OSToy app click on the "Toggle Health" button, in the "Toggle Health Status" tile.  You will see the "Current Health" switch to "I'm not feeling all that well".
+Podのイベントのページは、手順4から開いたままにします。次に、OSToyアプリの "Toggle Health Status" タイルの "Toggle Health" ボタンをクリックします。あなたは"Current Health" で "I'm not feeling all that well" に切り替えられるのを確認できます。
 
 ![Pod Events](/media/managedlab/15-ostoy-togglehealth.png)
 
-This will cause the app to stop responding with a "200 HTTP code". After 3 such consecutive failures ("A"), Kubernetes will kill the pod ("B") and restart it ("C"). Quickly switch back to the pod events tab and you will see that the liveliness probe failed and the pod as being restarted.
+これにより、アプリは "200 HTTP code" で応答しなくなります。3回連続して失敗した後（"A"）、Kubernetesはポッドを殺し（"B"）、再開します（"C"）。すばやくPodのイベントタブに戻ると、liveliness probeが失敗し、Podが再起動中であることがわかります。
 
 ![Pod Events2](/media/managedlab/16-ostoy-podevents2.png)
 

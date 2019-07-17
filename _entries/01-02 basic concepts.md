@@ -1,7 +1,7 @@
 ---
 sectionid: concepts
 sectionclass: h2
-title: Basic concepts
+title: 基本概念
 parent-id: intro
 ---
 
@@ -13,27 +13,28 @@ Source-to-Image(S2I)は、ソースコードから再現可能なコンテナイ
 
 {% collapsible %}
 
-For a dynamic language like Ruby, the build-time and run-time environments are typically the same. Starting with a builder image that describes this environment - with Ruby, Bundler, Rake, Apache, GCC, and other packages needed to set up and run a Ruby application installed - source-to-image performs the following steps:
+Rubyのような言語の場合、ビルド時環境とランタイム環境は通常同じです。この環境を記述するbuilder image（Ruby、Bundler、Rake、Apache、GCC、およびRubyアプリケーションをインストールして実行するために必要なその他のパッケージ）から始めて、source-to-imageは以下のステップを実行します。
 
-1. Start a container from the builder image with the application source injected into a known directory
+1. まずアプリケーションソースをディレクトリに入れて、builder imageからコンテナを起動します。
 
-1. The container process transforms that source code into the appropriate runnable setup - in this case, by installing dependencies with Bundler and moving the source code into a directory where Apache has been preconfigured to look for the Ruby config.ru file.
+1. コンテナプロセスはそのソースコードを実行可能な設定に変換します。この場合、ソースコードのApacheがRuby config.ruファイルを探すように事前設定されているディレクトリに移動し、Bundlerとの依存関係をインストールします。
 
-1. Commit the new container and set the image entrypoint to be a script (provided by the builder image) that will start Apache to host the Ruby application.
+1. 新しいコンテナをコミットし、imageのエントリーポイントを（builder imageによって提供）設定して、ApacheがRubyアプリケーションをホストするようにします。
 
-For compiled languages like C, C++, Go, or Java, the dependencies necessary for compilation might dramatically outweigh the size of the actual runtime artifacts. To keep runtime images slim, S2I enables a multiple-step build processes, where a binary artifact such as an executable or Java WAR file is created in the first builder image, extracted, and injected into a second runtime image that simply places the executable in the correct location for execution.
 
-For example, to create a reproducible build pipeline for Tomcat (the popular Java webserver) and Maven:
+C、C ++、Go、またはJavaなどのコンパイル済み言語の場合、コンパイルに必要な依存関係が実際のランタイム成果物のサイズが大きくなる場合があります。そのためランタイムイメージをスリムに保つために、S2Iはマルチステップビルドプロセスを有効にします。このプロセスでは、実行可能ファイルやJava WARファイルなどのバイナリが最初のビルダーイメージで作成されます。
 
-1. Create a builder image containing OpenJDK and Tomcat that expects to have a WAR file injected
+たとえば、Tomcat（一般的なJava Webサーバー）とMaven用のビルドパイプラインを作成するには、次のようにします。
 
-1. Create a second image that layers on top of the first image Maven and any other standard dependencies, and expects to have a Maven project injected
+1. WARファイルとOpenJDKとTomcatを含むビルダーイメージを作成します。
 
-1. Invoke source-to-image using the Java application source and the Maven image to create the desired application WAR
+1. 最初のイメージMavenおよびその他の依存関係の上にイメージを作成し、Mavenプロジェクトが作成されます。
 
-1. Invoke source-to-image a second time using the WAR file from the previous step and the initial Tomcat image to create the runtime image
+1. JavaアプリケーションのソースとMavenイメージを使用してsource-to-imageを呼び出し、アプリケーションWARを作成します。
 
-By placing our build logic inside of images, and by combining the images into multiple steps, we can keep our runtime environment close to our build environment (same JDK, same Tomcat JARs) without requiring build tools to be deployed to production.
+1. 前のステップのWARファイルと最初のTomcatイメージを使用して、source-to-imageをもう一度呼び出しランタイム・イメージを作成します。
+
+このようにビルドロジックをイメージ内に配置し、イメージを複数のステップに組み合わせることで、ビルドツールを運用環境にデプロイすることなく、ランタイム環境をビルド環境（同じJDK、同じTomcat JAR）に近づけることができます。
 
 {% endcollapsible %}
 
@@ -43,60 +44,65 @@ By placing our build logic inside of images, and by combining the images into mu
 
 ##### Reproducibility
 
-Allow build environments to be tightly versioned by encapsulating them within a container image and defining a simple interface (injected source code) for callers. Reproducible builds are a key requirement to enabling security updates and continuous integration in containerized infrastructure, and builder images help ensure repeatability as well as the ability to swap runtimes.
+ビルド環境をコンテナイメージ内にカプセル化し、呼び出し元のための単純なインタフェース（ソースコード）を定義することによって、ビルド環境を厳密にバージョン管理することができます。再現性のあるビルドは、セキュリティの更新とコンテナ化されたインフラストラクチャへのCIを実現するための重要な要件です。
 
 ##### Flexibility
 
-Any existing build system that can run on Linux can be run inside of a container, and each individual builder can also be part of a larger pipeline. In addition, the scripts that process the application source code can be injected into the builder image, allowing authors to adapt existing images to enable source handling.
+Linux上で実行できる既存のビルド環境はすべてコンテナ内で実行でき、個々のビルダーもより大きなパイプラインの一部になることができます。さらに、アプリケーションのソースコードを処理するスクリプトをビルダーイメージに挿入できるため、作成者は既存のイメージを修正してsource handlingを可能にします。
 
 ##### Speed
 
-Instead of building multiple layers in a single Dockerfile, S2I encourages authors to represent an application in a single image layer. This saves time during creation and deployment, and allows for better control over the output of the final image.
+1つのDockerfileに複数のレイヤーを構築するのではなく、S2Iは作成者が1つのアプリケーションを1つのイメージレイヤーに表現することを推奨します。これにより、作成および展開中の時間が短くなり、最終イメージの出力をより適切に制御できます。
 
 ##### Security
 
-Dockerfiles are run without many of the normal operational controls of containers, usually running as root and having access to the container network. S2I can be used to control what permissions and privileges are available to the builder image since the build is launched in a single container. In concert with platforms like OpenShift, source-to-image can enable admins to tightly control what privileges developers have at build time.
+Dockerfilesは、通常はrootとして実行され、コンテナネットワークにアクセスできる、通常のコンテナの多くの操作上の制御なしで実行されます。ビルドは単一のコンテナー内で起動されるため、S2Iを使用してビルダーイメージに使用できるアクセス許可と特権を制御できます。OpenShiftのようなプラットフォームと連携して、source-to-imageによって、管理者は開発者がビルド時に持つ特権を厳密に制御できます。
 
 {% endcollapsible %}
 
 ### Routes
 
-An OpenShift `Route` exposes a service at a host name, like www.example.com, so that external clients can reach it by name. When a `Route` object is created on OpenShift, it gets picked up by the built-in HAProxy load balancer in order to expose the requested service and make it externally available with the given configuration. You might be familiar with the Kubernetes `Ingress` object and might already be asking "what's the difference?". Red Hat created the concept of `Route` in order to fill this need and then contributed the design principles behind this to the community; which heavily influenced the `Ingress` design.  Though a `Route` does have some additional features as can be seen in the chart below.
+OpenShift Routeは、www.example.comのようにホスト名でサービスを公開しているため、外部クライアントは名前でアクセスできます。RouteオブジェクトがOpenShift上に作成され、それが要求されたサービスを公開し、与えられた構成で、それが外部から利用できるようにするために内部のHAProxyロードバランサによって処理されます。あなたがKubernetesのIngressオブジェクトに精通している場合、すでに「違いは何ですか」という疑問を持つかもしれません。Red HatはRouteという概念を作成し、その背後にある設計原則をコミュニティに提供しました。これはIngressデザインに大きな影響を与えました。以下の表に見られるように、Routeにはいくつかの追加機能があります。
 
 ![routes vs ingress](/media/managedlab/routes-vs-ingress.png)
 
-> **NOTE:** DNS resolution for a host name is handled separately from routing; your administrator may have configured a cloud domain that will always correctly resolve to the router, or if using an unrelated host name you may need to modify its DNS records independently to resolve to the router.
+> **NOTE:** ホスト名のDNS解決はルーティングとは別に処理されます。管理者が常にルーターに正しく解決されるクラウドドメインを設定しているか、無関係なホスト名を使用している場合は、ルーターに解決するためにDNSレコードを個別に変更する必要があります。
 
-Also of note is that an individual route can override some defaults by providing specific configuraitons in its annotations.  See here for more details: [https://docs.openshift.com/dedicated/architecture/networking/routes.html#route-specific-annotations](https://docs.openshift.com/dedicated/architecture/networking/routes.html#route-specific-annotations)
+また、routeはannotationで特定の設定を提供することによっていくつかのデフォルトを上書きすることができるということにも注目すべきです。詳細については、こちらを参照してください
+
+[https://docs.openshift.com/dedicated/architecture/networking/routes.html#route-specific-annotations](https://docs.openshift.com/dedicated/architecture/networking/routes.html#route-specific-annotations)
 
 ### ImageStreams
 
-An ImageStream stores a mapping of tags to images, metadata overrides that are applied when images are tagged in a stream, and an optional reference to a Docker image repository on a registry.
+ImageStreamは、イメージへのタグのマッピング、イメージがStream内でタグ付けされたときに適用されるメタデータオーバーライド、およびレジストリのDockerイメージリポジトリへのオプションの参照を格納します。
 
-
-#### What are the benefits? 
+#### 利点は何ですか? 
 
 {% collapsible %}
 
-Using an ImageStream makes it easy to change a tag for a container image.  Otherwise to change a tag you need to download the whole image, change it locally, then push it all back. Also promoting applications by having to do that to change the tag and then update the deployment object entails many steps.  With ImageStreams you upload a container image once and then you manage it’s virtual tags internally in OpenShift.  In one project you may use the `dev` tag and only change reference to it internally, in prod you may use a `prod` tag and also manage it internally. You don't really have to deal with the registry!
+ImageStreamを使用すると、コンテナイメージのタグを簡単に変更できます。それ以外の場合は、タグを変更するには、コンテナイメージ全体をダウンロードし、ローカルに変更してから、すべて元に戻す必要があります。また、タグを変更してから展開オブジェクトを更新することでアプリケーションを宣伝するには、多くのステップが必要です。ImageStreamsでは、コンテナイメージを一度アップロードしてから、そのタグをOpenShiftの内部で管理します。あるプロジェクトでは、devタグを使用してそのタグへの参照のみを内部的に変更することができますが、prodではprodタグを使用して内部的に管理することもできます。あなたは本当にレジストリを扱う必要はありません！
 
-You can also use ImageStreams in conjuction with DeploymentConfigs to set a trigger that will start a deployment as soon as a new image appears or a tag changes its reference.
-
+また、ImageStreamをDeploymentConfigsと組み合わせて使用​​して、新しいコンテナイメージが表示されたりタグの参照を変更したりするとすぐにDeploymentを開始するトリガを設定することもできます。
 
 {% endcollapsible %}
 
 
-See here for more details: [https://blog.openshift.com/image-streams-faq/](https://blog.openshift.com/image-streams-faq/) <br>
+詳細については、こちらを参照してください: 
+
+[https://blog.openshift.com/image-streams-faq/](https://blog.openshift.com/image-streams-faq/) <br>
 OpenShift Docs: [https://docs.openshift.com/container-platform/3.11/dev_guide/managing_images.html](https://docs.openshift.com/container-platform/3.11/dev_guide/managing_images.html)<br>
 ImageStream and Builds: [https://cloudowski.com/articles/why-managing-container-images-on-openshift-is-better-than-on-kubernetes/](https://cloudowski.com/articles/why-managing-container-images-on-openshift-is-better-than-on-kubernetes/)
 
 
 ### Builds
 
-A build is the process of transforming input parameters into a resulting object. Most often, the process is used to transform input parameters or source code into a runnable image. A BuildConfig object is the definition of the entire build process.
+Buildは、入力パラメータを結果のオブジェクトに変換するプロセスです。ほとんどの場合、このプロセスは入力パラメータまたはソースコードを実行可能なコンテナイメージに変換するために使用されます。BuildConfigオブジェクトは、ビルドプロセス全体の定義です。
 
-OpenShift Container Platform leverages Kubernetes by creating Docker-formatted containers from build images and pushing them to a container image registry.
+OpenShift Container Platformは、ビルドイメージからDockerコンテナを作成してコンテナイメージレジストリにプッシュすることで、Kubernetesを利用します。
 
-Build objects share common characteristics: inputs for a build, the need to complete a build process, logging the build process, publishing resources from successful builds, and publishing the final status of the build. Builds take advantage of resource restrictions, specifying limitations on resources such as CPU usage, memory usage, and build or pod execution time.
+ビルドオブジェクトには、ビルドの入力／ビルドプロセスの完了／ビルドプロセスのログ記録／成功したビルドからのリソースの公開／ビルドの最終ステータスの公開という共通の機能があります。ビルドはリソース制限を利用して、CPU使用率／メモリ使用量／ビルドまたはPodの実行時間などのリソースに対する制限を指定します。
 
-See here for more details: [https://docs.openshift.com/container-platform/3.11/architecture/core_concepts/builds_and_image_streams.html](https://docs.openshift.com/container-platform/3.11/architecture/core_concepts/builds_and_image_streams.html)
+詳細については、こちらを参照してください:
+
+ [https://docs.openshift.com/container-platform/3.11/architecture/core_concepts/builds_and_image_streams.html](https://docs.openshift.com/container-platform/3.11/architecture/core_concepts/builds_and_image_streams.html)
+

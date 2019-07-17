@@ -1,51 +1,51 @@
 ---
 sectionid: lab2-appoverview
 sectionclass: h2
-title: Application Overview
+title: アプリケーションの概要
 parent-id: lab-clusterapp
 ---
 
 ### Resources
 
-- The source code for this app is available here: <https://github.com/openshift-cs/ostoy>
-- OSToy front-end container image: <https://quay.io/aroworkshop/ostoy-frontend>
-- OSToy microservice container image: <https://quay.io/aroworkshop/ostoy-microservice>
-- Deployment Definition YAMLs:
+- このアプリケーションのソースコード: <https://github.com/openshift-cs/ostoy>
+- OSToy の front-end コンテナイメージ: <https://quay.io/aroworkshop/ostoy-frontend>
+- OSToy の microservice コンテナイメージ: <https://quay.io/aroworkshop/ostoy-microservice>
+- YAMLによるマニフェストファイル:
   - [ostoy-fe-deployment.yaml](/yaml/ostoy-fe-deployment.yaml)
   - [ostoy-microservice-deployment.yaml](/yaml/ostoy-microservice-deployment.yaml)
 
-> **Note** In order to simplify the deployment of the app (which you will do next) we have included all the objects needed in the above YAMLs as "all-in-one" YAMLs.  In reality though, an enterprise would most likely want to have a different yaml file for each Kubernetes object.
+> **Note** アプリのデプロイを簡単にするために、上記のYAMLに必要なすべてのオブジェクトを1つの "all-in-one" としてYAMLを作成しています。しかし実際には、企業はKubernetesオブジェクトごとに異なるyamlファイルを作成したいと考えるでしょう。
 
-### About OSToy
+### OSToyについて
 
-OSToy is a simple Node.js application that we will deploy to Azure Red Hat OpenShift. It is used to help us explore the functionality of Kubernetes. This application has a user interface which you can:
+OSToyは、Azure Red Hat OpenShiftにデプロイする簡単なNode.jsアプリケーションです。それは私たちがKubernetesの機能を確認するのを助けるのに使われます。このアプリケーションは、次の機能を持っています。
 
-- write messages to the log (stdout / stderr)
-- intentionally crash the application to view self-healing
-- toggle a liveliness probe and monitor OpenShift behavior
-- read config maps, secrets, and env variables
-- if connected to shared storage, read and write files
-- check network connectivity, intra-cluster DNS, and intra-communication with an included microservice
+- ログにメッセージを書き込む（stdout / stderr）
+- 意図的にアプリケーションをクラッシュさせて自己修復を表示する
+- LivenessProbeを切り替えてOpenShiftの動作を監視する
+- ConfigMap、Secrets、および環境変数を読み取る
+- 共有ストレージに接続されている場合のファイルの読み書き
+- ネットワーク接続/クラスタ内DNS/マイクロサービスとの内部通信を確認
 
-### OSToy Application Diagram
+### OSToy アプリケーション構成図
 
 ![OSToy Diagram](/media/managedlab/4-ostoy-arch.png)
 
-### Familiarization with the Application UI
+### アプリケーションUIの説明
 
-1. Shows the pod name that served your browser the page.
-2. **Home:** The main page of the application where you can perform some of the functions listed which we will explore.
-3. **Persistent Storage:**  Allows us to write data to the persistent volume bound to this application.
-4. **Config Maps:**  Shows the contents of configmaps available to the application and the key:value pairs.
-5. **Secrets:** Shows the contents of secrets available to the application and the key:value pairs.
-6. **ENV Variables:** Shows the environment variables available to the application.
-7. **Networking:** Tools to illustrate networking within the application.
-8. Shows some more information about the application.
+1. ブラウザにページを提供したポッド名を表示します。
+2. **Home:** アプリケーションのメインページで、ここで説明する機能のいくつかを実行できます。
+3. **Persistent Storage:**  このアプリケーションにバインドされている永続ボリュームにデータを書き込むことができます。
+4. **Config Maps:**  アプリケーションで使用可能なConfigMapの内容とキーと値のペアを表示します。
+5. **Secrets:** アプリケーションで使用可能なSecretsの内容とキーと値のペアを表示します。
+6. **ENV Variables:** アプリケーションで使用可能な環境変数を表示します。
+7. **Networking:** アプリケーション内のネットワーキングを説明するためのツールです
+8. アプリケーションに関する詳細情報を表示します。
 
 ![Home Page](/media/managedlab/10-ostoy-homepage-1.png)
 
-### Learn more about the application
+### アプリケーションの詳細
 
-To learn more, click on the "About" menu item on the left once we deploy the app.
+詳細については、アプリをデプロイしたら、左側の[About]メニュー項目をクリックしてください。
 
 ![ostoy About](/media/managedlab/5-ostoy-about.png)

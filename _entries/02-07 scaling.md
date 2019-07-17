@@ -1,15 +1,15 @@
 ---
 sectionid: scaling
 sectionclass: h2
-title: Scaling
+title: クラスタのスケール
 parent-id: lab-ratingapp
 ---
 
-### Scale the Azure Red Hat OpenShift cluster
+### Azure Red Hat OpenShiftクラスターをスケールする
 
-You can scale the number of application nodes in the cluster using the Azure CLI.
+Azure CLIを使用して、クラスター内のアプリケーションノードの数を増やすことができます。
 
-Run the below on the [Azure Cloud Shell](https://shell.azure.com) to scale your cluster to 5 application nodes. Replace `<cluster name>` and `<resource group name>` with your applicable values. After a few minutes, `az openshift scale` will complete successfully and return a JSON document containing the scaled cluster details.
+Azure Cloud Shellで以下のコマンドを実行して、クラスターを5つのアプリケーションノードに拡張します。ここで、`<cluster name>`  と`<resource group name>` はあなたの適切な値に変更してください。数分後、`az openshift scale`  は正常に完了し、スケーリングされたクラスターの詳細を含むJSONドキュメントを返します。
 
 ```sh
 az openshift scale  --name <cluster name> --resource-group <resource group name> --compute-count 5

@@ -1,35 +1,40 @@
 ---
 sectionid: lab2-storage
 sectionclass: h2
-title: Persistent Storage
+title: 永続ストレージ
 parent-id: lab-clusterapp
 ---
 
-In this section we will execute a simple example of using persistent storage by creating a file that will be stored on a persistent volume in our cluster and then confirm that it will "persist" across pod failures and recreation.
+このセクションでは、クラスタ内の永続的ボリュームに格納されるファイルを作成することによって永続的ストレージを使用する簡単な例を実行し、それがポッドの障害や再作成を超えて"persist" することを確認します。
 
 {% collapsible %}
 
-Inside the OpenShift web UI click on *Storage* in the left menu. You will then see a list of all persistent volume claims that our application has made.  In this case there is just one called "ostoy-pvc".  You will also see other pertinent information such as whether it is bound or not, size, access mode and age.  
+OpenShiftのWeb UI内で、左側のメニューの *Storage* をクリックします。その後、私たちのアプリケーションが行ったすべての永続的ボリュームのリストが表示されます。この場合"ostoy-pvc"という名前のものだけがあります。バインドされているかどうか／サイズ／access mode／ageなどの関連情報も表示されます。
 
-In this case the mode is RWO (Read-Write-Once) which means that the volume can only be mounted to one node, but the pod(s) can both read and write to that volume.  The default in ARO is for Persistent Volumes to be backed by Azure Disk, but it is possible to chose Azure Files so that you can use the RWX (Read-Write-Many) access mode.  ([See here for more info on access modes](https://docs.openshift.com/aro/architecture/additional_concepts/storage.html#pv-access-modes))
+この場合、モードはRWO（Read-Write-Once）で、ボリュームは1つのノードにしかマウントできませんが、ポッドはそのボリュームに対して読み取りと書き込みの両方を実行できます。AROの既定の設定では、Persistent VolumeはAzure Diskでバックアップされますが、RWX（Read-Write-Many）アクセスモードを使用できるようにAzure Filesを選択することもできます。
 
-In the OSToy app click on *Persistent Storage* in the left menu.  In the "Filename" area enter a filename for the file you will create. (ie: "test-pv.txt")
+([アクセスモードの詳細についてはこちらをご覧ください](https://docs.openshift.com/aro/architecture/additional_concepts/storage.html#pv-access-modes))
 
-Underneath that, in the "File Contents" box, enter text to be stored in the file. (ie: "Azure Red Hat OpenShift is the greatest thing since sliced bread!" or "test" :) ).  Then click "Create file".
+OSToyアプリの左側のメニューにある *Persistent Storage* をクリックします。"Filename" エリアに、作成するファイルのファイル名を入力します。（例： "test-pv.txt"）
+
+その下の"File Contents" ボックスに、ファイルに保存するテキストを入力します。（例：「Azure Red Hat OpenShift is the greatest thing since sliced bread!」または「test」)。
+
+次に「ファイルを作成」​​をクリックします。
 
 ![Create File](/media/managedlab/17-ostoy-createfile.png)
 
-You will then see the file you created appear above under "Existing files".  Click on the file and you will see the filename and the contents you entered.
+作成したファイルが "Existing files" の下に表示されます。ファイルをクリックすると、ファイル名と入力した内容が表示されます。
 
 ![View File](/media/managedlab/18-ostoy-viewfile.png)
 
-We now want to kill the pod and ensure that the new pod that spins up will be able to see the file we created. Exactly like we did in the previous section. Click on *Home* in the left menu.
 
-Click on the "Crash pod" button.  (You can enter a message if you'd like).
+Podをkillして、スピンアップした新しいPodが作成したファイルを確認できるようにします。前のセクションで行ったのとまったく同じです。左側のメニューで *Home* をクリックします。
 
-Click on *Persistent Storage* in the left menu
+"Crash pod"ボタンをクリックしてください。（必要に応じてメッセージを入力できます）
 
-You will see the file you created is still there and you can open it to view its contents to confirm.
+左側のメニューで *Persistent Storage* をクリックします
+
+あなたはあなたが作成したファイルが永続化されているのを確認できます。
 
 ![Crash Message](/media/managedlab/19-ostoy-existingfile.png)
 

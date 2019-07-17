@@ -79,6 +79,6 @@ echo 'export PATH=$PATH:~/openshift' >> ~/.bashrc && source ~/.bashrc
 
 ```
 
-The OpenShift CLI (oc) is now installed.
+これでOpenShift CLI (oc) がインストールできました。
 
 {% endcollapsible %}

@@ -1,19 +1,19 @@
 ---
 sectionid: lab2-app-deployment
 sectionclass: h2
-title: Application Deployment
+title: アプリケーションの配置
 parent-id: lab-clusterapp
 ---
 
-### Retrieve login command
+### ログインコマンドを取得する
 
-If not logged in via the CLI, click on the dropdown arrow next to your name in the top-right and select *Copy Login Command*.
+CLIからログインしていない場合は、右上にある自分の名前の横にあるドロップダウン矢印をクリックして *Copy Login Command* を選択します。
 
 {% collapsible %}
 
 ![CLI Login](/media/managedlab/7-ostoy-login.png)
 
-Then go to your terminal and paste that command and press enter.  You will see a similar confirmation message if you successfully logged in.
+terminal にコピーしたコマンドを貼り付けて、Enterを押してください。正常にログインできた場合は、確認メッセージが表示されます。
 
 ```sh
 [okashi@ok-vm ostoy]# oc login https://openshift.abcd1234.eastus.azmosa.io --token=hUXXXXXX
@@ -28,17 +28,17 @@ You have access to the following projects and can switch between them with 'oc p
 
 {% endcollapsible %}
 
-### Create new project
+### 新しいプロジェクトを作成する
 
-Create a new project called "OSToy" in your cluster.
+クラスタに "OSToy" という新しいプロジェクトを作成します。
 
 {% collapsible %}
 
-Use the following command
+次のコマンドを実行すると
 
 `oc new-project ostoy`
 
-You should receive the following response
+以下のようなレスポンスが返されます。
 
 ```sh
 [okashi@ok-vm ostoy]# oc new-project ostoy
@@ -51,19 +51,19 @@ You can add applications to this project with the 'new-app' command. For example
 to build a new example application in Ruby.
 ```
 
-Equivalently you can also create this new project using the web UI by selecting "Application Console" at the top  then clicking on "+Create Project" button on the right.
+同様に、上部の[Application Console]を選択してから右側の[+ Create Project]ボタンをクリックして、Web UIを使用してこの新しいプロジェクトを作成することもできます。
 
 ![UI Create Project](/media/managedlab/6-ostoy-newproj.png)
 
 {% endcollapsible %}
 
-### Download YAML configuration
+### YAMLのマニフェストファイルをダウンロードする
 
-Download the Kubernetes deployment object yamls from the following locations to your local drive in a directory of your choosing (just remember where you placed them for the next step).
+選択したディレクトリのローカルドライブにKubernetesのYAMLをダウンロードします（次の手順のためにそれらをどこに置いたかを覚えておいてください）。
 
 {% collapsible %}
 
-Feel free to open them up and take a look at what we will be deploying. For simplicity of this lab we have placed all the Kubernetes objects we are deploying in one "all-in-one" yaml file.  Though in reality there are benefits to separating these out into individual yaml files.
+それらを開いて、私たちがデプロイするものを見てください。このラボを簡単にするために、デプロイするすべてのKubernetesオブジェクトを1つの"all-in-one" のyamlファイルに配置しました。しかし実際のプロジェクトではこれらを個々のyamlファイルに分離することには利点があります。
 
 [ostoy-fe-deployment.yaml](/yaml/ostoy-fe-deployment.yaml)
 
@@ -71,17 +71,18 @@ Feel free to open them up and take a look at what we will be deploying. For simp
 
 {% endcollapsible %}
 
-### Deploy backend microservice
+### バックエンドのmicroserviceをデプロイする
 
-The microservice application serves internal web requests and returns a JSON object containing the current hostname and a randomly generated color string.
+バックエンドのマイクロサービスアプリケーションは、内部Web要求を処理し、現在のホスト名とランダムに生成されたカラー文字列を含むJSONオブジェクトを返します。
 
 {% collapsible %}
 
-In your command line deploy the microservice using the following command:
+次のコマンドを使用してマイクロサービスをデプロイします。
 
 `oc apply -f ostoy-microservice-deployment.yaml`
 
-You should see the following response:
+次のようなレスポンスが表示されるはずです。
+
 ```
 [okashi@ok-vm ostoy]# oc apply -f ostoy-microservice-deployment.yaml
 deployment.apps/ostoy-microservice created
@@ -90,13 +91,13 @@ service/ostoy-microservice-svc created
 
 {% endcollapsible %}
 
-### Deploy the front-end service
+### front-end serviceのデプロイ
 
-The frontend deployment contains the node.js frontend for our application along with a few other Kubernetes objects to illustrate examples.
+フロントエンドデプロイメントには、他のいくつかのKubernetesオブジェクトと共に、Node.jsフロントエンドが含まれています。
 
 {% collapsible %}
 
- If you open the *ostoy-fe-deployment.yaml* you will see we are defining:
+`ostoy-fe-deployment.yaml` を開くと、次のように定義されていることがわかります。
 
 - Persistent Volume Claim
 - Deployment Object
@@ -105,11 +106,11 @@ The frontend deployment contains the node.js frontend for our application along 
 - Configmaps
 - Secrets
 
-In your command line deploy the frontend along with creating all objects mentioned above by entering:
+コマンドラインで、次のように入力して上記のすべてのオブジェクトを作成します。
 
 `oc apply -f ostoy-fe-deployment.yaml`
 
-You should see all objects created successfully
+すべてのオブジェクトが正しく作成されたはずです。
 
 ```sh
 [okashi@ok-vm ostoy]# oc apply -f ostoy-fe-deployment.yaml
@@ -125,13 +126,13 @@ secret/ostoy-secret created
 
 {% endcollapsible %}
 
-### Get route
+### routeの取得
 
-Get the route so that we can access the application via `oc get route`
+`oc get route` でアプリケーションにアクセスできるようにルートを取得します
 
 {% collapsible %}
 
-You should see the following response:
+次のような応答が表示されるはずです。
 
 ```sh
 NAME           HOST/PORT                                                      PATH      SERVICES              PORT      TERMINATION   WILDCARD

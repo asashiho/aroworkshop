@@ -1,25 +1,28 @@
 ---
 sectionid: lab2-network
 sectionclass: h2
-title: Networking and Scaling
+title: ネットワーキングとスケーリング
 parent-id: lab-clusterapp
 ---
 
-In this section we'll see how OSToy uses intra-cluster networking to separate functions by using microservices and visualize the scaling of pods.
+このセクションでは、OSToyがクラスター内ネットワークを使用してマイクロサービスを使用して機能を分離し、Podのスケーリングを視覚化する方法を説明します。
 
-Let's review how this application is set up...
+このアプリケーションの設定方法を確認しましょう
 
 ![OSToy Diagram](/media/managedlab/4-ostoy-arch.png)
 
-As can be seen in the image above we see we have defined at least 2 separate pods, each with its own service.  One is the frontend web application (with a service and a publicly accessible route) and the other is the backend microservice with a service object created so that the frontend pod can communicate with the microservice (accross the pods if more than one).  Therefore this microservice is not accessible from outside this cluster, nor from other namespaces/projects (due to ARO's network policy, **ovs-subnet**).  The sole purpose of this microservice is to serve internal web requests and return a JSON object containing the current hostname and a randomly generated color string.  This color string is used to display a box with that color displayed in the tile (titled "Intra-cluster Communication").
+上の図からわかるように、少なくとも2つの別々のPodを定義しており、それぞれに独自のServiceがあります。1つはフロントエンドWebアプリケーション（サービスとパブリックからアクセス可能なrouteを持つ）、もう1つはフロントエンドポッドがマイクロサービスと通信できるように作成されたサービスオブジェクトを持つバックエンドマイクロサービスです。このマイクロサービスは、このクラスタの外部からも、他のネームスペース/プロジェクトからもアクセスできません（AROの **ovs-subnet** ネットワークポリシーのため）このマイクロサービスのの目的は、内部のWebリクエストを処理し、現在のホスト名とランダムに生成された文字列を含むJSONオブジェクトを返すことです。この文字列は、その色がタイルに表示されているボックスを表示するために使用されます（"Intra-cluster Communication"というタイトルが付いています）。
 
-### Networking
+### ネットワーキング
 
-Click on *Networking* in the left menu. Review the networking configuration.
+左側のメニューで*Networking*をクリックします。ネットワーク構成を確認してください。
 
 {% collapsible %}
 
 The right tile titled "Hostname Lookup" illustrates how the service name created for a pod can be used to translate into an internal ClusterIP address. Enter the name of the microservice following the format of `my-svc.my-namespace.svc.cluster.local` which we created in our `ostoy-microservice.yaml` which can be seen here:
+"Hostname Lookup"というタイトルのタイルは、Pod用に作成されたService名を使用して内部のClusterIPアドレスに変換する方法を示しています。`my-svc.my-namespace.svc.cluster.local`  
+
+ここで`ostoy-microservice.yaml`が作成した形式に従ってマイクロサービスの名前を入力してください。
 
 ```sh
 apiVersion: v1
@@ -38,23 +41,30 @@ spec:
     app: ostoy-microservice
 ```
 
-In this case we will enter: `ostoy-microservice-svc.ostoy.svc.cluster.local`
+たとえばこの場合は `ostoy-microservice-svc.ostoy.svc.cluster.local` となります。
 
-We will see an IP address returned.  In our example it is ```172.30.165.246```.  This is the intra-cluster IP address; only accessible from within the cluster.
+ここでIPアドレスが返されます（例：172.30.165.246）
+
+これはクラスタ内IPアドレスでクラスタ内からのみアクセス可能です。
+
 
 ![ostoy DNS](/media/managedlab/20-ostoy-dns.png)
 
 {% endcollapsible %}
 
-### Scaling
+### スケーリング
 
 OpenShift allows one to scale up/down the number of pods for each part of an application as needed.  This can be accomplished via changing our *replicaset/deployment* definition (declarative), by the command line (imperative), or via the web UI (imperative). In our deployment definition (part of our `ostoy-fe-deployment.yaml`) we stated that we only want one pod for our microservice to start with. This means that the Kubernetes Replication Controler will always strive to keep one pod alive.  (We can also define [autoscalling](https://docs.openshift.com/container-platform/3.11/dev_guide/pod_autoscaling.html) based on load to expand past what we defined if needed)
 
+OpenShiftを使用すると、必要に応じてアプリケーションのPod数をup/downできます。これは、*replicaset/deployment* 定義の変更（宣言）／コマンドライン（必須）／Web UI（必須）を使用して実現できます。
+
+私たちのDepoymentマニフェストファイル（ostoy-fe-deployment.yaml）で、マイクロサービスのための1つのPodだけで始めたいと宣言しています。つまり、Kubernetes Replication Controlerは常に1つのポッドを存続させようとします。（必要に応じて定義したものを超えて拡張するために、負荷に基づいて[オートスケール](https://docs.openshift.com/container-platform/3.11/dev_guide/pod_autoscaling.html)することも可能です）
+
 {% collapsible %}
 
-If we look at the tile on the left we should see one box randomly changing colors.  This box displays the randomly generated color sent to the frontend by our microservice along with the pod name that sent it. Since we see only one box that means there is only one microservice pod.  We will now scale up our microservice pods and will see the number of boxes change.
+左側のタイルを見ると、1つのボックスがランダムに色を変えているのがわかります。このボックスには、マイクロサービスによってフロントエンドに送信されたランダムに生成された色と、それを送信したPod名が表示されます。1つのボックスしかないので、マイクロサービスポッドは1つしかありません。Podを拡大して、ボックスの数が変わるのを確認しましょう。
 
-To confirm that we only have one pod running for our microservice, run the following command, or use the web UI.
+マイクロサービスに対して実行されているPodが1つだけであることを確認するには、次のコマンドを実行するか、Web UIを使用します。
 
 ```sh
 [okashi@ok-vm ostoy]# oc get pods
@@ -63,13 +73,11 @@ ostoy-frontend-679cb85695-5cn7x       1/1       Running   0          1h
 ostoy-microservice-86b4c6f559-p594d   1/1       Running   0          1h
 ```
 
-Let's change our microservice definition yaml to reflect that we want 3 pods instead of the one we see.  Download the [ostoy-microservice-deployment.yaml](/yaml/ostoy-microservice-deployment.yaml) and save it on your local machine.
+yamlを変更して、表示されているPodの代わりに3つのPodが必要であることを反映します。[ostoy-microservice-deployment.yaml](/yaml/ostoy-microservice-deployment.yaml)をダウンロードしてローカルマシンに保存します。
 
-Open the file using your favorite editor. Ex: `vi ostoy-microservice-deployment.yaml`.
+お気に入りのエディタを使ってファイルを開きます。（例：vi ostoy-microservice-deployment.yaml）
 
-Find the line that states `replicas: 1` and change that to `replicas: 3`. Then save and quit.
-
-It will look like this
+`replicas: 1`を`replicas: 3`に変更し、保存して終了します。
 
 ```sh
 spec:
@@ -77,30 +85,33 @@ spec:
       matchLabels:
         app: ostoy-microservice
     replicas: 3
- ```
+```
 
-Assuming you are still logged in via the CLI, execute the following command:
+CLIから次のコマンドを実行します。
 
 `oc apply -f ostoy-microservice-deployment.yaml`
 
-Confirm that there are now 3 pods via the CLI (`oc get pods`) or the web UI (*Overview > expand "ostoy-microservice"*).
+CLI（`oc get pods`）またはWeb UI（[Overview]> [ostoy-microservice]）で、3つのPodが表示されていることを確認します。
 
-See this visually by visiting the OSToy app and seeing how many boxes you now see.  It should be three.
+OSToyアプリにアクセスして、現在表示されているボックスの数が3つになっていることを視覚的に確認できます。
 
 ![UI Scale](/media/managedlab/22-ostoy-colorspods.png)
 
 Now we will scale the pods down using the command line.  Execute the following command from the CLI: 
+次にコマンドラインを使用してPodをdownします。CLIから次のコマンドを実行します。
 
 `oc scale deployment ostoy-microservice --replicas=2`
 
-Confirm that there are indeed 2 pods, via the CLI (`oc get pods`) or the web UI.
+CLI（`oc get pods`）またはWeb UIを介して、Podが2つになっていることを確認してください。
 
-See this visually by visiting the OSToy App and seeing how many boxes you now see.  It should be two.
+同様にOSToyアプリにアクセスして、現在表示されているボックスの数が2つになっていることを視覚的に確認できます。
 
-Lastly let's use the web UI to scale back down to one pod.  In the project you created for this app (ie: "ostoy") in the left menu click *Overview > expand "ostoy-microservice"*.  On the right you will see a blue circle with the number 2 in the middle. Click on the down arrow to the right of that to scale the number of pods down to 1.
+最後に、Web UIを使用して1つのPodにdonwしましょう。このアプリ用に作成したプロジェクト（"ostoy"）の左側のメニューで、[Overview ]をクリックし、[ostoy-microservice ]を展開します。
+
+ここにに数字2の青い円があります。その右側にある下向き矢印をクリックして、ポッドの数を1に減らします。
 
 ![UI Scale](/media/managedlab/21-ostoy-uiscale.png)
 
-See this visually by visiting the OSToy app and seeing how many boxes you now see.  It should be one.
+同様にOSToyアプリにアクセスして、現在表示されているボックスの数を確認し1つになっていることを視覚的に確認できます。
 
 {% endcollapsible %}

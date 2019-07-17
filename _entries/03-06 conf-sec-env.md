@@ -1,21 +1,23 @@
 ---
 sectionid: lab2-config
 sectionclass: h2
-title: Configuration
+title: 設定
 parent-id: lab-clusterapp
 ---
 
-In this section we'll take a look at how OSToy can be configured using [ConfigMaps](https://docs.openshift.com/container-platform/3.11/dev_guide/configmaps.html), [Secrets](https://docs.openshift.com/container-platform/3.11/dev_guide/secrets.html), and [Environment Variables](https://docs.openshift.com/container-platform/3.11/dev_guide/environment_variables.html).  This section won't go into details explaining each (the links above are for that), but will show you how they are exposed to the application.  
+このセクションでは、[ConfigMaps](https://docs.openshift.com/container-platform/3.11/dev_guide/configmaps.html)／[Secrets](https://docs.openshift.com/container-platform/3.11/dev_guide/secrets.html)／[Environment Variables](https://docs.openshift.com/container-platform/3.11/dev_guide/environment_variables.html)を使用してOSToyを構成する方法を説明します。このセクションでは、それぞれを説明する詳細については説明しませんがアプリケーションにどのように公開されているのかを説明します。
 
-### Configuration using ConfigMaps
 
-ConfigMaps allow you to decouple configuration artifacts from container image content to keep containerized applications portable.
+### ConfigMapsを使った設定
+
+ConfigMapsを使用すると、コンテナー化されたアプリケーションの移植性を維持するために、コンテナーイメージコンテンツから構成ファイルを分離できます。
 
 {% collapsible %}
 
-Click on *Config Maps* in the left menu.
+左側のメニューで *Config Maps*  をクリックします。
 
-This will display the contents of the configmap available to the OSToy application.  We defined this in the `ostoy-fe-deployment.yaml` here:
+OSToyアプリケーションで利用可能な設定マップの内容が表示されます。これらは `ostoy-fe-deployment.yaml` で定義しました。
+
 
 ```sh
 kind: ConfigMap
@@ -28,15 +30,16 @@ data:
 
 {% endcollapsible %}
 
-### Configuration using Secrets
+### Secretsによる秘匿情報の設定
 
-Kubernetes Secret objects allow you to store and manage sensitive information, such as passwords, OAuth tokens, and ssh keys. Putting this information in a secret is safer and more flexible than putting it, verbatim, into a Pod definition or a container image.
+Kubernetes Secretオブジェクトを使用すると、パスワード／OAuthトークン／SSHキーなどの機密情報を保存および管理できます。この情報をSecretsにすることは、Podのマニフェストやコンテナイメージにそのまま入れることよりも安全でフレキシブルです。
 
 {% collapsible %}
 
-Click on *Secrets* in the left menu.
+左側のメニューで *Secrets* をクリックします。
 
-This will display the contents of the secrets available to the OSToy application.  We defined this in the `ostoy-fe-deployment.yaml` here:
+これにより、OSToyアプリケーションで利用可能なSecretsの内容が表示されます。これらは `ostoy-fe-deployment.yaml` で定義しました。
+
 
 ```sh
 apiVersion: v1
@@ -50,15 +53,16 @@ type: Opaque
 
 {% endcollapsible %}
 
-### Configuration using Environment Variables
+### 環境変数を使用した設定
 
-Using environment variables is an easy way to change application behavior without requiring code changes. It allows different deployments of the same application to potentially behave differently based on the environment variables, and OpenShift makes it simple to set, view, and update environment variables for Pods/Deployments.
+環境変数を使用すると、コードを変更しなくてもアプリケーションの動作を簡単に変更できます。これにより、同じアプリケーションの異なるデプロイメントが環境変数に基づいて異なる動作をする可能性があります。OpenShiftを使用すると、Pods／Deploymentの環境変数を簡単に設定／表示／更新ができます。
 
 {% collapsible %}
 
-Click on *ENV Variables* in the left menu.
+左側のメニューで *ENV Variables* をクリックします。
 
-This will display the environment variables available to the OSToy application.  We added three as defined in the deployment spec of `ostoy-fe-deployment.yaml` here:
+これにより、OSToyアプリケーションで利用可能な環境変数が表示されます。Depoymentで定義されている3つを追加しました。
+
 
 ```sh
   env:
@@ -76,6 +80,6 @@ This will display the environment variables available to the OSToy application. 
     value: OSTOY_MICROSERVICE_SVC
 ```
 
-The last one, `MICROSERVICE_NAME` is used for the intra-cluster communications between pods for this application.  The application looks for this environment variable to know how to access the microservice in order to get the colors.
+最後の`MICROSERVICE_NAME` はこのアプリケーションのPod間のクラスタ内通信に使用されます。アプリケーションはcolorsを取得するためにマイクロサービスにアクセスする方法を知るためこの環境変数を参照します。
 
 {% endcollapsible %}
